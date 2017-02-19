@@ -5,7 +5,8 @@
 
 % *** QUOTES PACKAGE ***
 %\usepackage [english]{babel}
-\usepackage [autostyle, english = american]{csquotes}
+%\usepackage [autostyle, english = american]{csquotes}
+\usepackage{csquotes}
 %\MakeOuterQuote{''}
 
 \usepackage[T1]{fontenc}
@@ -37,7 +38,8 @@
 
 \title{Engineering Privacy with Protest:\\a Case Study of AdNauseam}
 
-\author{\IEEEauthorblockN{Daniel C. Howe}
+\author{
+\IEEEauthorblockN{Daniel C. Howe}
 \IEEEauthorblockA{School of Creative Media\\City University, Hong Kong\\Email: daniel@rednoise.org}
 \and
 \IEEEauthorblockN{Helen Nissenbaum}
@@ -97,6 +99,7 @@ engineering, privacy, tracking, advertising, obfuscation, adblocking, surveillan
 % Conclusions, Lessons, Future Work
 
 \section{Introduction}
+
 % no \IEEEPARstart
 The ad blocking wars \cite{Nytimes} reflect wide ranging resistance to aspects of the online advertising landscape, specifically tracking, malware, annoyance, degradation of browser performance, bandwidth costs. A number of technical systems, utilizing diverse techniques, have addressed these issues in various combinations. AdNauseam, an open-source, cross-platform browser extension, contributes to this growing arsenal not only by hiding ads and blocking malware, but also by leveraging obfuscation to confound those seeking to profile users based on interests revealed through ad clicks. Specifically AdNauseam hides online ads while quietly clicking each ad behind the scenes in order to register visits in ad network databases. The goal of the software is to pollute the data gathered by trackers and, by diminishing confidence in this particular indicator, render their efforts to profile less effective. At the same time, the software allows users to engage in a form of expression, by actively disrupting the economic system that drives surreptitious tracking, and by creating mistrust (advertisers generally pay ad networks for clicks) within the advertising system. Additionally, AdNauseam makes the ads it collects available to users to explore at their convenience, via an interactive display designed to facilitate real-time understanding of the advertising system at work.
 
@@ -112,13 +115,15 @@ The AdNauseam extension is designed to realize three tangible goals for users, e
 
 \subsection{Feature Mapping}
 
-Protection -> Clicking, Blocking Trackers and Malware (< uBlock)\\
-Expression -> Clicking, DNT\\
+The mapping of goals to features was relatively straightforward in AdNauseam. The goal of protection was implemented at a basic level via a) visitation and b) blocking of non-visual trackers and malware.
+
+Protection -> Clicking, Blocking Trackers and Malware (< uBlock)\\ Visitation
+Expression -> Clicking, DNT\\  Visitation
 Understanding -> Menu, Vault, FAQ, Links\\
 
 \subsection{Data Minimization}
 
-Following a growing body of literature on privacy-by-design\cite{Gurses-0, Hoepman, Gurses-1, Hansen, \bibitem{Cavoukian}, our design and implementation process followed principles of data minimization, which played out in several specific ways. First off, AdNauseam was designed to function without ever communicating with a ``home server'' or sending user-data to any other entity, for any reason. Of course this meant that, as developers, we are unable to access usage patterns and related data, which may have yielded important insights. Yet, we felt that this a) clarified our own position in regard to privacy and data collection, and b) enabled us to sidestep potential problems of data leakage or interception in transit. Similarly, this principle helped us to identify 3 pieces of private information which might potentially be leaked during normal function of the tool, and to then expose these as user options, with defaults that would provide normal users with full protection, while allowing advanced users to opt-in to change these settings for higher performance. These data were all potentially exposed to third-parties (websites and advertising networks) as part of the normal HTTP headers sent with browser requests for ads being clicked; specifically page referer, user-agent, and cookies. From either the referer or cookies, an advertising network present on multiple sites sites (Google, for example, is estimated to have code running on 70\% of websites\cite{Englehardt}) could potentially recreate large portions of a user's click path, while the user-agent header could be used by malicious trackers attempting to perform browser fingerprinting\cite{Nikiforakis}. Thus all such information was stripped from outgoing requests by default. As discussed below, this choice was not without its negative effects. Choosing to foreground the safety of user data in this way directly diminished AdNauseam's efficacy in relation to its concurrent goal of expression.
+Following a growing body of literature on privacy-by-design\cite{Gurses-0, Hoepman, Gurses-1, Hansen, Cavoukian}, our design and implementation process followed principles of data minimization, which played out in several specific ways. First off, AdNauseam was designed to function without ever communicating with a ``home server'' or sending user-data to any other entity, for any reason. Of course this meant that, as developers, we are unable to access usage patterns and related data, which may have yielded important insights. Yet, we felt that this a) clarified our own position in regard to privacy and data collection, and b) enabled us to sidestep potential problems of data leakage or interception in transit. Similarly, this principle helped us to identify 3 pieces of private information which might potentially be leaked during normal function of the tool, and to then expose these as user options, with defaults that would provide normal users with full protection, while allowing advanced users to opt-in to change these settings for higher performance. These data were all potentially exposed to third-parties (websites and advertising networks) as part of the normal HTTP headers sent with browser requests for ads being clicked; specifically page referer, user-agent, and cookies. From either the referer or cookies, an advertising network present on multiple sites sites (Google, for example, is estimated to have code running on 70\% of websites\cite{Englehardt}) could potentially recreate large portions of a user's click path, while the user-agent header could be used by malicious trackers attempting to perform browser fingerprinting\cite{Nikiforakis}. Thus all such information was stripped from outgoing requests by default. As discussed below, this choice was not without its negative effects. Choosing to foreground the safety of user data in this way directly diminished AdNauseam's efficacy in relation to its concurrent goal of expression.
 
 \subsection{Legitimacy Analysis}
 
@@ -166,6 +171,8 @@ This module is responsible for the analysis and categorization of requests follo
 In order to categorize 3rd-party requests (and the resources they return), we leverage the capabilities of the open-source uBlock-Origin \cite{Gorhill} project, described by its authors as a ``wide-spectrum blocker''. uBlock is a configurable, list-based ``blocker'', that is effective and efficient \cite{Wills}. Like other blockers, uBlock allows users to specify publicly accessible lists of resources to be blocked and/or allowed. Each list contains syntactic matching rules for the retrieval of resources by the browser. For each request, the software first determines whether it should be blocked or allowed, and if it is allowed, whether it should be visible or hidden. If hidden, the element is downloaded and included in the page's DOM (the hierarchical, tree-like representation of elements on a webpage), but made invisible to the user. Both blocking and hiding are specified via rules that may include the serving domain, the type of resource (e.g., images or video), and/or properties of the DOM container (for example, a DIV with a specific id or class). Rules are included from widely distributed lists that are updated and maintained by individuals and communities (e.g, ``EasyList'' \cite{EasyList}, or ``Peter Lowe's ad server list \cite{Lowe}''). Additionally, users can augment these lists with custom rules they create, either to block or hide new content, or to whitelist a page, site or element.
 
 The detection module works incrementally as page elements are loaded (or dynamically generated) and inserted into the DOM. DOM elements marked for hiding are given a CSS class that sets their display to invisible and collapses the surrounding DOM so as not to leave blank space on the page. Each hidden element is then passed to the \emph{Extraction} module for further processing.
+
+TODO: add about blocking of malware, non-viz and the google response
 
 \subsection{Extraction}
 
@@ -369,7 +376,7 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 
 \bibitem{EasyList} ``EasyList.'' 2016. https://easylist.to/>
 
-\bibitem{Englehardt} Englehardt, Steven, and Arvind Narayanan. "Online tracking: A 1-million-site measurement and analysis." Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security. ACM, 2016.
+\bibitem{Englehardt} Englehardt, Steven, and Arvind Narayanan. ``Online tracking: A 1-million-site measurement and analysis.'' Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security. ACM, 2016.
 
 \bibitem{Grosser} Grosser, Ben. ``ScareMail.'' 2013. Web http://bengrosser.com/projects/scaremail/.
 
@@ -427,7 +434,9 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 
 \bibitem{Peddinti} Peddinti, Sai Teja, and Nitesh Saxena. ``On the privacy of web search based on query obfuscation: a case study of TrackMeNot.'' International Symposium on Privacy Enhancing Technologies Symposium. Springer Berlin Heidelberg, 2010.
 
-\bibitem{Roesner} Roesner, F., Kohno, T., and Wetherall, D. (2012). Detecting and defending against third-party tracking on the web. In Proceedings of the 9th USENIX conference on Networked Systems Design and Implementation (pp. 12-12). USENIX Association.
+\bibitem{Regan} Regan, Priscilla M. ``Legislating privacy: Technology, social values, and public policy.'' Univ. of North Carolina Press, 1995.
+
+\bibitem{Roesner} Roesner, F., Kohno, T., and Wetherall, D. (2012). Detecting and defending against third-party tracking on the web. In Proceedings of the 9th USENIX conference on Networked Systems Design and Implementation (pp. 12-12). USENIX Association. 
 
 \bibitem{Schulze} Schulze, H. and Mochalski, K. Internet Study, 2008/2009, IPOQUE Report:
 http://www.ipoque.com/resources/internet-studies/internet-study-2008\_2009.

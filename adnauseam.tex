@@ -95,8 +95,6 @@ engineering, privacy, tracking, advertising, obfuscation, adblocking, surveillan
 %   - Balancing design goals
 %   - Difficulties in evaluation/threat-modeling
 % Conclusions, Lessons, Future Work
-%
-% PAPER START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
 % no \IEEEPARstart
@@ -114,10 +112,9 @@ The AdNauseam extension is designed to realize three tangible goals for users, e
 
 \subsection{Feature Mapping}
 
-Understanding -> Vault, FAQ, Links\\
-Expression -> Clicking, DNT\\
 Protection -> Clicking, Blocking Trackers and Malware (< uBlock)\\
-
+Expression -> Clicking, DNT\\
+Understanding -> Menu, Vault, FAQ, Links\\
 
 \subsection{Data Minimization}
 
@@ -127,15 +124,9 @@ Following a growing body of literature on privacy-by-design\cite{Gurses-0, Hoepm
 
 \blockquote{Before any privacy-by-design activities are embarked upon, a discussion needs to take place with respect to the ``legitimacy'' of the desired system given its burden on privacy. Legitimacy is described as ``the establishment that the application goals would be useful for the intended use population''. This question ought to also be re-iterated once the design of the system is completed, and possibly even after deployment.}\cite{Iachello}.
 
-[NOTE: If we are going to do this section, I think we need to specifically address the question in the above quotation, saying that for at least a subset of our users, who are already using a quality adblocker (like uBlock Origin), AdNauseam represents a hit to their personal privacy, hoever it makes up for it when consider the larger social good...]
+A critic might ask: why click? Why not simply hide ads from users and hide users from trackers? There are two reasons. First, AdNauseam is inspired by the path-breaking work of Priscilla Regan, who argued in her book, ``Legislating Privacy", that beyond its protection of individual interests, privacy serves social ends\cite{Regan}. In one version of this argument, privacy functions much like a collective good, such as clean air or national defense. As a non-excludable, indivisible collective good, privacy is not doled out individually. Although, in certain situations it may be allocated according to individual needs and preferences, or even willingness to pay, and for these situations, privacy tools have been developed for individuals to use, one-at-a-time. AdNauseam, however, embodies Regan’s notion of privacy as a collective good. As such, it fills the need of individual users, but also attempts to infuse privacy throughout a system. This commitment to privacy as a collective good presents different and interesting engineering and evaluation challenges, which, in our view, have not received adequate attention. Thus AdNauseam may stimulate deliberation not only on its particular architecture and features, but may draw attention to the conception of privacy it seeks to promote. A second reason for clicking, as opposed to simply blocking, is that AdNauseam seeks concurrently to achieve the goal of expressive resistance to tracking through protest. And since protest generally involves being vocal, AdNauseam's design seeks to give voice to users. It does not promote the conception of privacy as secrecy or concealment, as many other tools do, by enabling individuals to act stealthily and hide their tracks. Instead, it provides a means for users to express, in plain sight, their dissent by disrupting the dominant model of commercial surveillance.
 
-A critic might ask: why click? Why not simply hide ads from users and hide users from trackers? There are two reasons. First, AdNauseam is inspired by the path-breaking work of Priscilla Regan, who argued in her book, ``Legislating Privacy", that beyond its protection of individual interests, privacy serves social ends\cite{Regan}. In one version of this argument, privacy functions much like a collective good, such as clean air or national defense. As a non-excludable, indivisible collective good, privacy is not doled out individually. Although, in certain situations it may be allocated according to individual needs and preferences, or even willingness to pay, and for these situations, privacy tools have been developed for individuals to use, one-at-a-time. AdNauseam, however, embodies Regan’s notion of privacy as a collective good. As such, it fills the need of individual users, but also attempts to infuse privacy throughout a system. This commitment to privacy as a collective good presents different and interesting engineering and evaluation challenges, which, in our view, have not received adequate attention. Thus AdNauseam may stimulate deliberation not only on its particular architecture and features, but may draw attention to the conception of privacy it seeks to promote.
-
-A second reason for clicking, as opposed to simply blocking, is that AdNauseam seeks concurrently to achieve the goal of expressive resistance to tracking through protest. And since protest generally involves being vocal, AdNauseam's design seeks to give voice to users. It does not promote the conception of privacy as secrecy or concealment, as many other tools do, by enabling individuals to act stealthily and hide their tracks. Instead, it provides a means for users to express, in plain sight, their dissent by disrupting the dominant model of commercial surveillance.
-
-Critics have warned that approaches such as AdNauseam’s harm ``independent content producers who can no longer support their sites.'' As this critique touches a broad array of tools, including standard ad blockers, it will take us too far afield to address it in full here.  However, setting aside the rejoinder which points out that these sites are enabling surveillance, or more harshly, are ``selling out'' their visitors, the hope is that loosening the chokehold of tracking over Web and mobile domains, will allow other business models to flourish.
-
-Toward this end we have enabled support in AdNauseam for the EFF's Do Not Track mechanism, a machine-verifiable (and potentially legally-binding) assertion on the part of websites that commit to not violating the privacy of users who choose to send the Do Not Track (DNT) header. The basic mechanism of the EFF's DNT Policy is a machine-verifiable text file that domains can post publicly to unilaterally commit to respecting a meaningful version of Do Not Track (DNT), in such a way that other software can tell they have done so. Once posted, the sites are bound (often legally, depending on jurisdiction) to follow the specified practices for themselves and for 3rd party affilitiates. For websites that make this commitment, AdNauseam does not (by default) hide or black their ads and other resources nor do we simulate clicks on their ads.
+Critics have warned that approaches such as AdNauseam’s harm ``independent content producers who can no longer support their sites.'' As this critique touches a broad array of tools, including standard ad blockers, it will take us too far afield to address it in full here.  However, setting aside the rejoinder which points out that these sites are enabling surveillance, or more harshly, are ``selling out'' their visitors, the hope is that loosening the chokehold of tracking over Web and mobile domains, will allow other business models to flourish. Toward this end we have enabled support in AdNauseam for the EFF's Do Not Track mechanism, a machine-verifiable (and potentially legally-binding) assertion on the part of websites that commit to not violating the privacy of users who choose to send the Do Not Track (DNT) header. The basic mechanism of the EFF's DNT Policy is a machine-verifiable text file that domains can post publicly to unilaterally commit to respecting a meaningful version of Do Not Track (DNT), in such a way that other software can tell they have done so. Once posted, the sites are bound (often legally, depending on jurisdiction) to follow the specified practices for themselves and for 3rd party affilitiates. For websites that make this commitment, AdNauseam does not (by default) hide or black their ads and other resources nor do we simulate clicks on their ads.
 
 \subsection{Socially-informed Risk Analysis}
 
@@ -147,7 +138,7 @@ Given the three goals we hoped to achieve and the set of features to which these
   \item Malware/Malvertising
 \end{itemize}
 
-To establish a conservative lower-bound on exposure, we set a constraint on design and implementation decisions that user exposure with AdNauseam must be strictly lower on all dimensions than with our baseline case of browsing with an unmodified browser. Conversely, we hypothesized that the current performance of uBlock, the open-source blocker with the best performance metrics, would provide an upper bound on risk exposure for the individual user. As AdNauseam must interact, at least minimally, with advertising servers in order to fulfill its functional requirements, it would necessarily expose users to more risk than the current state-of-the art blocker (e.g., uBlock), which does not have such a constraint. Notice that we refer specifically here to `'risk for \emph{the individual}', a distinction we return to below. In all case we were able to
+To establish a conservative lower-bound on exposure, we set a constraint on design and implementation decisions that user exposure with AdNauseam must be strictly lower on all dimensions than with our baseline case of browsing with an unmodified browser. Conversely, we hypothesized that the current performance of uBlock, the open-source blocker with the best performance metrics, would provide an upper bound on risk exposure for the individual user. As AdNauseam must interact, at least minimally, with advertising servers in order to fulfill its functional requirements, it would necessarily expose users to more risk than the current state-of-the art blocker (e.g., uBlock), which does not have such a constraint. Notice that we refer specifically here to `'risk for \emph{the individual}', a distinction we return to below. In all cases (see \emph{Comparative Evaluation} below), we were able to verify that the risk to users on each of the dimensions listed above was strictly diminished by using AdNauseam, both in comparison to the no-blocker case, and to the most popular ad-blocker, AdBlock Plus\cite{PageFair}.
 
 \subsection{Design Tensions}
 
@@ -429,6 +420,8 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 \bibitem{Nikiforakis} Nikiforakis, Nick, et al. ``Cookieless monster: Exploring the ecosystem of web-based device fingerprinting.'' Security and privacy (SP), 2013 IEEE symposium on. IEEE, 2013.
 
 \bibitem{Nytimes} The New York Times. The Ad Blocking Wars. http://ny ti.ms/1Qs20YB, 2016.
+
+\bibitem{PageFair} PageFair, Adobe ``The cost of ad blocking–PageFair and Adobe 2015 Ad Blocking Report.'' (2015)
 
 \bibitem{Pasquale} Pasquale, F. (2015). The black box society: The secret algorithms that control money and information. Cambridge: Harvard University Press
 

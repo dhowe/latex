@@ -65,7 +65,13 @@
 
 %\start{abstract}
 
-\emph{Abstract}---The strategy of obfuscation has been broadly applied---in search, location tracking, private communication, anonymity---and, as such, has been recognized as an important element of the privacy engineer's toolbox. However, there remains a need for clearly articulated case studies describing not only the engineering of obfuscation mechanisms but, further, providing a critical appraisal of obfuscation's fit for specific socio-technical applications. This is the aim of our paper, which presents our experiences designing, implementing, and distributing AdNauseam, an open-source browser extension that leverages obfuscation to counter tracking by online advertisers.At its core, AdNauseam works much like a list-based adblocker, hiding ads and blocking trackers. However, it provides two additional features. First, it collects each ad that it finds in its “Vault', allowing users to interactively explore the ads they have been served, and providing insight into the algorithmic profiles created by advertising networks. Second, AdNauseam simulates clicks on each ad in order to confuse trackers and diminish the value of aggregated tracking data.A critic might ask: why click? Why not simply hide ads from users and hide users from trackers? The twofold answer reveals what makes AdNauseam distinctive. To begin, it conceptualises privacy as a societal value. Whereas many privacy tools offer solutions only for individual users, AdNauseam is built on the assumption that, often, effective privacy protection must be infused throughout a system. This assumption presents different and interesting engineering challenges. Second, AdNauseam seeks to concurrently achieve the goal of resistance through protest. And since protest frequently involves being vocal, AdNauseam's core design may conflict with privacy conceptions based on secrecy and concealment. While such tensions, and tradeoffs that result,  are not uncommon in privacy engineering (for example, in private communications tools, between security properties and usability), the process of designing and building AdNauseam demanded their systematic consideration and resolution.In this paper we describe the goals of the project, with a focus on the operational definition of privacy that serves as its guide, and the implemented features to which these goals map. We present the engineering approach employed, including the set of tensions we encountered during implementation; how they were resolved and our methods of evaluation on both technical and ethical dimensions. We discuss challenges of adoption and distribution, including AdNauseam banning from Google's Chrome store. These experiences in design, engineering, and distribution inspire concluding thoughts on the broader challenges of embedding privacy tools like AdNauseam within complex socio-technical contexts, especially those dominated by actors openly resistant to them.
+\emph{Abstract}---The strategy of obfuscation has been broadly applied---in search, location tracking, private communication, anonymity---and, as such, has been recognized as an important element of the privacy engineer's toolbox. However, there remains a need for clearly articulated case studies describing not only the engineering of obfuscation mechanisms but, further, providing a critical appraisal of obfuscation's fit for specific socio-technical applications. This is the aim of our paper, which presents our experiences designing, implementing, and distributing AdNauseam, an open-source browser extension that leverages obfuscation to counter tracking by online advertisers.
+
+At its core, AdNauseam works much like a list-based adblocker, hiding ads and blocking trackers. However, it provides two additional features. First, it collects each ad that it finds in its “Vault', allowing users to interactively explore the ads they have been served, and providing insight into the algorithmic profiles created by advertising networks. Second, AdNauseam simulates clicks on each ad in order to confuse trackers and diminish the value of aggregated tracking data.
+
+A critic might ask: why click? Why not simply hide ads from users and hide users from trackers? The twofold answer reveals what makes AdNauseam distinctive. To begin, it conceptualises privacy as a societal value. Whereas many privacy tools offer solutions only for individual users, AdNauseam is built on the assumption that, often, effective privacy protection must be infused throughout a system. This assumption presents different and interesting engineering challenges. Second, AdNauseam seeks to concurrently achieve the goal of resistance through protest. And since protest frequently involves being vocal, AdNauseam's core design may conflict with privacy conceptions based on secrecy and concealment. While such tensions, and tradeoffs that result,  are not uncommon in privacy engineering (for example, in private communications tools, between security properties and usability), the process of designing and building AdNauseam demanded their systematic consideration and resolution.
+
+In this paper we describe the goals of the project, with a focus on the operational definition of privacy that serves as its guide, and the implemented features to which these goals map. We present the engineering approach employed, including the set of tensions we encountered during implementation; how they were resolved and our methods of evaluation on both technical and ethical dimensions. We discuss challenges of adoption and distribution, including AdNauseam banning from Google's Chrome store. These experiences in design, engineering, and distribution inspire concluding thoughts on the broader challenges of embedding privacy tools like AdNauseam within complex socio-technical contexts, especially those dominated by actors openly resistant to them.
 
 %\end{abstract}
 \vspace{5mm}
@@ -333,23 +339,15 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 
 \begin{thebibliography}{99}
 
-\bibitem{Acar} Acar, G., Eubank, C., Englehardt, S., Juarez, M., Narayanan, A., \& Diaz, C. (2014). “The web never forgets: Persistent tracking mechanisms in the wild.” In Proc. of the 2014 ACM SIGSAC Conference on Computer and Communications Security (pp. 674-689). ACM.
-
 \bibitem{AdBlock} AdBlock Plus. “AdBlock Plus.” n.d. https://adblockplus.org/.
 
 \bibitem{AddArt} AddArt. “AddArt.” n.d. http://add-art.org/.
 
 \bibitem{Balsa} Balsa, Ero, Carmela Troncoso, and Claudia Diaz. “OB-PWS: Obfuscation-based private web search.” Security and Privacy (SP), 2012 IEEE Symposium on. IEEE, 2012.
 
-\bibitem{Barford} Barford, P., Canadi, I., Krushevskaja, D., Ma, Q., \& Muthukrishnan, S. (2014). “Adscape: Harvesting and analyzing online display ads.” In Proceedings of the 23rd international conference on World wide web (pp. 597-608). ACM.
-
 \bibitem{Battelle} Battelle, J. (2011). “The search: How Google and its rivals rewrote the rules of business and transformed our culture.” Nicholas Brealey Publishing. Chicago
 
-\bibitem{Blas} Blas, Zach, “Facial Weaponization Suite”, n.p. 2011. Web http://www.zachblas.info/projects/facial-weaponization-suite.
-
 \bibitem{Brunton} Brunton, Finn, and Helen Nissenbaum. “Obfuscation: A User's Guide for Privacy and Protest.” Cambridge: MIT Press, 2015.
-
-\bibitem{Castelluccia} Castelluccia, C., Kaafar, M. A., and Tran, M. D. (2012). Betrayed by your ads! In Privacy Enhancing Technologies (pp. 1-17). Springer Berlin Heidelberg.
 
 \bibitem{Cavoukian} Cavoukian, Ann, and Michelle Chibba. “Cognitive Cities, Big Data and Citizen Participation: The Essentials of Privacy and Security”. Towards Cognitive Cities. Springer International Publishing, 2016. 61-82.
 
@@ -371,25 +369,15 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 
 \bibitem{Gervais} Gervais, Arthur, Shokri, Reza, Singla, Adish, Capkun, Srdjan and Lenders, Vincent. “Quantifying Web-Search Privacy.” Proceedings of the 2014 ACM SIGSAC Conference on Computer and Communications Security (CCS '14). New York, NY: ACM, 2014. 966-977. Print.
 
-\bibitem{Gill} Gill, P., Erramilli, V., Chaintreau, A., Krishnamurthy, B., Papagiannaki, K., and Rodriguez, P. (2013). “Follow the money: understanding economics of online aggregation and advertising.” In Proceedings of the 2013 conference on Internet measurement conference (pp. 141-148). ACM.
-
 \bibitem{Goldfarb} Goldfarb, A., and Tucker, C. (2011). “Shifts in privacy concerns.” Available at SSRN 1976321.
-
-\bibitem{Gomer} Gomer, R., Mendes Rodrigues, E., Milic-Frayling, N., \& Schraefel, M. C. (2013). “Network analysis of third party tracking: User exposure to tracking cookies through search”. In Web Intelligence (WI) and Intelligent Agent Technologies (IAT), 2013 IEEE/WIC/ACM International Joint Conferences, 1, (pp. 549-556). IEEE.
 
 \bibitem{Gorhill} Gorhill. “uBlock Origin - An efficient blocker for Chromium and Firefox.” 2016. https://github.com/gorhill/uBlock
 
 \bibitem{Grosser} Grosser, Ben. “ScareMail.” 2013.\\ Web http://bengrosser.com/projects/scaremail/.
 
-\bibitem{Grotov} Grotov, Artem, et al. “A comparative study of click models for web search.” International Conference of the Cross-Language Evaluation Forum for European Languages. Springer International Publishing, 2015.
-
-\bibitem{Guha} Guha, S., Cheng, B., and Francis, P. (2010). Challenges in measuring online advertising systems. In Proceedings of the 10th ACM SIGCOMM conference on Internet measurement (pp. 81-87). ACM.
-
 \bibitem{Gurses-0} Gürses, Seda, Carmela Troncoso, and Claudia Diaz. “Engineering privacy by design.” Computers, Privacy \& Data Protection 14.3 (2011).
 
 \bibitem{Gurses-1} Gürses, Seda, Carmela Troncoso, and Claudia Diaz. “Engineering privacy by design reloaded.” Amsterdam Privacy Conference. 2015.
-
-\bibitem{Hagborg} Dewey-Hagborg, H. “Invisible.” 2014.\\ http://www.newmuseumstore.org/browse.cfm/invisible/4,6471.html.
 
 \bibitem{Hansen} Hansen, Marit, Meiko Jensen, and Martin Rost. “Protection goals for privacy engineering.” Security and Privacy Workshops (SPW), 2015 IEEE. IEEE, 2015.
 
@@ -408,10 +396,6 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 \bibitem{Iachello} Iachello, G, and G. D. Abowd. “Privacy and proportionality: adapting legal evaluation techniques to inform design in ubiquitous computing.” Proceedings of the SIGCHI conference on Human factors in computing systems. ACM, 2005.
 
 \bibitem{Johnston} Johnston, C. “Why Facebook Is Really Blocking the Ad Blockers”, In The New Yorker. Fri, 12 Aug. 2016
-
-\bibitem{Klise} Klise, Steve. “I Like What I See.” 2012-14. Software/browser extension https://github.com/sklise/i-like-what-i-see.
-
-\bibitem{Lecuyer} Lecuyer, M., Ducoffe, G., Lan, F., Papancea, A., Petsios, T., Spahn, R., ... and Geambasu, R. (2014). “Xray: Enhancing the web's transparency with differential correlation”. In 23rd USENIX Security Symposium (USENIX Security 14), San Diego, CA.
 
 \bibitem{Liu} Liu, D., Chen, J., and Whinston, A.B. “Current Issues in Keyword Auctions”. In Business Computing. Eds. Gediminas Adomavicius and Alok Gupta. Bingley: Emerald Group Publishing Limited, 2009. 69-98. Print.
 
@@ -439,8 +423,6 @@ In some of the most revealing exchanges we have had with critics, we note a palp
 
 \bibitem{Regan} Regan, Priscilla M. “Legislating privacy: Technology, social values, and public policy.” Univ. of North Carolina Press, 1995.
 
-\bibitem{Roesner} Roesner, F., Kohno, T., and Wetherall, D. (2012). “Detecting and defending against third-party tracking on the web." In Proceedings of the 9th USENIX conference on Networked Systems Design and Implementation (pp. 12-12). USENIX Association.
-
 \bibitem{Schulze} Schulze, H. and Mochalski, K. “Internet Study, 2008/2009, IPOQUE Report."
 http://www.ipoque.com/resources/internet-studies/internet-study-2008\_2009.
 
@@ -451,8 +433,6 @@ http://www.ipoque.com/resources/internet-studies/internet-study-2008\_2009.
 \bibitem{Tucker} Tucker, C. E. (2014). “Social networks, personalized advertising, and privacy controls.” Journal of Marketing Research, 51(5), (pp. 546-562).
 
 \bibitem{Turow} Turow, J., King, J., Hoofnagle, C. J., Bleakley, A., and Hennessy, M. (2009). “Americans reject tailored advertising and three activities that enable it.” Available at SSRN 1478214.
-
-\bibitem{Vallina} Vallina-Rodriguez, N., Shah, J., Finamore, A., Grunenberger, Y., Papagiannaki, K., Haddadi, H., and Crowcroft, J. (2012). “Breaking for commercials: characterizing mobile advertising.” In Proceedings of the 2012 ACM conference on Internet measurement conference (pp. 343-356). ACM
 
 \bibitem{Wills} Wills, Craig E., and Doruk C. Uzunoglu. “What Ad Blockers Are (and Are Not) Doing." (2016).
 

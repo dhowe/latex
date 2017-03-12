@@ -1,35 +1,16 @@
 \documentclass[conference]{IEEEtran}
-% Some Computer Society conferences also require the compsoc mode option,
-% but others use the standard conference format.
-
-
-% *** QUOTES PACKAGE ***
-%\usepackage [english]{babel}
-%\usepackage [autostyle, english = american]{csquotes}
-%\MakeOuterQuote{”}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[threshold=1]{csquotes}
 
-
-% *** GRAPHICS PACKAGE ***
 \ifCLASSINFOpdf
   \usepackage[pdftex]{graphicx}
-  % declare the path(s) where your graphic files are
   \graphicspath{{../images/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
   \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \else
-  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
-  % will default to the driver specified in the system graphics.cfg if no
-  % driver is specified.
   \usepackage[dvips]{graphicx}
-  % declare the path(s) where your graphic files are
   \graphicspath{{../images/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
   \DeclareGraphicsExtensions{.eps}
 \fi
 
@@ -46,22 +27,10 @@
 
 \maketitle
 
-\emph{Abstract}---The strategy of obfuscation has been broadly applied---in search, location tracking, private communication, anonymity---and, as such, has been recognized as an important element of the privacy engineer's toolbox. However, there remains a need for clearly articulated case studies describing not only the engineering of obfuscation mechanisms but, further, providing a critical appraisal of obfuscation's fit for specific socio-technical applications. This is the aim of our paper, which presents our experiences designing and implementing AdNauseam, an open-source browser extension that leverages obfuscation to counter tracking by online advertisers.\\
+\emph{Abstract}---The strategy of obfuscation has been broadly applied---in search, location tracking, private communication, anonymity---and, as such, has been recognized as an important element of the privacy engineer's toolbox. However, there remains a need for clearly articulated case studies describing not only the engineering of obfuscation mechanisms but, further, providing a critical appraisal of obfuscation's fit for specific socio-technical applications. This is the aim of our paper, which presents our experiences designing, implementing, and dsitributing AdNauseam, an open-source browser extension that leverages obfuscation to counter tracking by online advertisers.\\
 \indent At its core, AdNauseam works like a list-based blocker, hiding ads and blocking trackers. However, it provides two additional features. First, it collects each ad that it finds in its ‘Vault’, allowing users to interactively explore the ads they have been served, and providing insight into the algorithmic profiles created by advertising networks. Second, AdNauseam simulates clicks on ads in order to confuse trackers and diminish the value of aggregated tracking data.\\
 \indent A critic might ask: why click? Why not simply hide ads from users and hide users from trackers? The twofold answer reveals what may be distinctive elements of the AdNauseam approach. To begin, we conceptualize privacy as a societal value. Whereas many privacy tools offer solutions only for individual users, AdNauseam is built on the assumption that, often, effective privacy protection must be infused throughout a system. This assumption presents different and interesting engineering challenges. Second, AdNauseam seeks to concurrently achieve the goal of resistance through protest. And since protest frequently involves being vocal, AdNauseam's core design at times conflicts with privacy conceptions based on secrecy and concealment. While such tensions, and the tradeoffs that result, are not uncommon in privacy engineering (for example, in private communications tools, between security properties and usability), the process of designing and building AdNauseam demanded their systematic consideration and resolution.\\
 \indent In this paper we describe the goals of the project, with a focus on the operational definition of privacy that serves as its guide, and the implemented features to which these goals map. We present the engineering approach employed, including tensions we encountered during implementation; how they were resolved and our methods of evaluation on both technical and ethical dimensions. We discuss challenges of distribution, including Google's ban of AdNauseam from its Chrome store. We conclude with thoughts on the broader challenges that face privacy tools which must operate within complex socio-technical contexts, especially those dominated by actors openly resistant to them.
-
-%\begin{IEEEkeywords}
-%engineering, privacy, tracking, advertising, obfuscation, adblocking, surveillance, values-in-design
-%\end{IEEEkeywords}
-
-% For peer review papers, you can put extra information on the cover page as needed:
-% \ifCLASSOPTIONpeerreview
-% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
-% \fi
-% For peerreview papers, this IEEEtran command inserts a page break and
-% creates the second title. It will be ignored for other modes.
-\IEEEpeerreviewmaketitle
 
 \section{Introduction}
 
@@ -88,15 +57,17 @@ The mapping of goals to features (and to the system modules described below) was
 
 Following a growing body of literature on privacy-by-design \cite{Gurses-0, Hoepman, Gurses-1, Hansen, Cavoukian}, our design and implementation process followed principles of data minimization. Thus AdNauseam was designed to function without ever communicating to a “home server” or sending user-data to any other entity, for any reason. For developers, this meant we were unable to access usage patterns and related data, which may have yielded important insights. Yet this both clarified our own position in regard to data collection, and also enabled us to sidestep potential problems of data leakage or interception in transit. Similarly, this principle helped us to identify three pieces of private information which could potentially be leaked during normal function of the tool, and to then expose these as user options, with defaults that would provide normal users with full protection, while allowing advanced users the option to change these settings for higher performance. These data were all potentially exposed to third-parties (websites and advertising networks) as part of the normal HTTP headers sent with requests for ads being clicked; specifically page referer, user-agent, and cookies. From either the referer or cookies, an advertising network present on multiple sites (Google, for example, is estimated to have code running on 70\% of websites \cite{Englehardt}) could potentially recreate large portions of a user's click path, while the user-agent header could be used by malicious trackers attempting to perform browser fingerprinting \cite{Nikiforakis}. Thus all such information was stripped from outgoing requests by default. As discussed below, this choice is not without consequences. Choosing to foreground the safety of user data in this way impacted AdNauseam's efficacy on other goals.
 
-\vspace{3mm}
-\blockquote{\emph{The application of data minimization does not necessarily imply anonymity, but may also be achieved by means of concealing information related to identifiable individuals} \cite{Gurses-0}.}
 \vspace{2mm}
+\blockquote{\emph{The application of data minimization does not necessarily imply anonymity, but may also be achieved by means of concealing information related to identifiable individuals} \cite{Gurses-0}.}
+\vspace{1mm}
 
 \noindent Additionally we have applied the principle of data minimization to our ad export feature, which allows users to export their aggregate ad collection (as JSON) in order to sync or migrate between machines, to backup, or to share. From our experiences user-testing this feature, we noted that such exports contained potentially sensitive data, specifically users' click trails (stored as the locations for found ads), possibly over months or even years. When considering how to handle this data we noted that it also existed in the browser's local storage, which could potentially be accessed by a malicious actor. Thus we subsequently implemented encryption for this data, both in memory and in storage, as well as offering the user the option, before each export, to redact all ad locations if desired.
 
 \subsection{Legitimacy Analysis}
 
+\vspace{1mm}
 \blockquote{\emph{Before any privacy-by-design activities are embarked upon, a discussion needs to take place with respect to the “legitimacy” of the desired system given its burden on privacy. Legitimacy is described as “the establishment that the application goals would be useful for the intended use population.”}\cite{Iachello}\cite{Gurses-1}}
+\vspace{1mm}
 
 \noindent A critic might ask: why click? Why not simply hide ads from users and hide users from trackers? There are two reasons. First, AdNauseam is inspired by the path-breaking work of Priscilla Regan, who argue that beyond its protection of individual interests, privacy serves social ends, much like a collective good such as clean air or national defense \cite{Regan}. This commitment to privacy as a collective good presents interesting engineering and evaluation challenges, which, in our view, warrant close attention. Thus AdNauseam may stimulate deliberation not only on its particular features, but may draw attention to the conception of privacy it seeks to promote. A second reason for clicking, as opposed to simply blocking, is that AdNauseam seeks concurrently to achieve the goal of expressive resistance to tracking through protest. And since protest generally involves being vocal, AdNauseam's design seeks to give voice to users. Rather than promoting the conception of privacy as concealment AdNauseam provides a means for users to express, in plain sight, their dissent by disrupting the dominant model of commercial surveillance.
 
@@ -104,15 +75,19 @@ Lastly, critics have claimed that AdNauseam harms “independent content produce
 
 \subsection{Socially-informed Risk Analysis}
 
-Given the goals we hoped to achieve and the set of features to which these mapped, we set out to identify risks to which users might be exposed. For each such risk, we considered the degree to which the user would be exposed when browsing the web using an unmodified browser, in comparison to the degree of exposure while using AdNauseam. Finally we considered their exposure using existing alternatives, ad-blockers like AdBlock Plus \cite{AdBlock} or wide-spectrum blockers like uBlock \cite{Gorhill}(see, for example, Figure \ref{fig:thirdparty} below). The following risks were identified: increased tracking by advertisers, leakage of personal data; and harms via malware/malvertising.
+Given the goals we hoped to achieve and the set of features to which these mapped, we set out to identify risks to which users might be exposed. For each such risk, we considered the degree to which the user would be exposed when browsing the web using an unmodified browser, in comparison to the degree of exposure while using AdNauseam. Finally we considered their exposure using existing alternatives, ad-blockers like AdBlock Plus \cite{AdBlock} or wide-spectrum blockers like uBlock \cite{Gorhill}(see, for example, Figure \ref{fig:thirdparty} below). The following risks were identified:
+% increased tracking by advertisers, leakage of personal data; and harms via malware/malvertising.
 
-% \begin{itemize}
-%   \item Increased tracking by advertisers and other data-gatherers
-%   \item Personal data leakage (via clicks, via hiding rather than blocking, via ad export)
-%   \item Malware/malvertising
-% \end{itemize}
+\vspace{2mm}
+\begin{itemize}
+\item Increased tracking by advertisers and other data-gatherers
+\item Personal data leakage (via clicks, via hiding rather than blocking, via ad export)
+\item Malware/malvertising
+\end{itemize}
+\vspace{1mm}
 
-To establish a lower-bound on exposure, we set a constraint that user exposure with AdNauseam must be strictly lower on all dimensions than with our baseline case of browsing with an unmodified browser. Conversely, we hypothesized that the current performance of uBlock, the open-source blocker with the best performance metrics, would provide an upper-bound on risk exposure for the individual user. As AdNauseam must interact, at least minimally, with advertising servers in order to fulfill its functional requirements, it would necessarily expose users to more risk than the current state-of-the art blocker (e.g., uBlock). Notice that we refer specifically here to risk for \emph{the individual}, a distinction we return to below. In all cases noted above (see \emph{Comparative Evaluation} below), we were able to verify that risk to users was diminished with AdNauseam, both in comparison with the no-blocker case, \emph{and} to AdBlock Plus, the most commonly installed blocker\cite{PageFair}.
+
+\noindent To establish a lower-bound on exposure, we set a constraint that user exposure with AdNauseam must be strictly lower on all dimensions than with our baseline case of browsing with an unmodified browser. Conversely, we hypothesized that the current performance of uBlock, the open-source blocker with the best performance metrics, would provide an upper-bound on risk exposure for the individual user. As AdNauseam must interact, at least minimally, with advertising servers in order to fulfill its functional requirements, it would necessarily expose users to more risk than the current state-of-the art blocker (e.g., uBlock). Notice that we refer specifically here to risk for \emph{the individual}, a distinction we return to below. In all cases noted above (see \emph{Comparative Evaluation} below), we were able to verify that risk to users was diminished with AdNauseam, both in comparison with the no-blocker case, \emph{and} to AdBlock Plus, the most commonly installed blocker\cite{PageFair}.
 
 
 \subsection{Design Tensions}
@@ -122,7 +97,7 @@ To establish a lower-bound on exposure, we set a constraint that user exposure w
 For obfuscation to function effectively as a means of counter-surveillance, the noise generated must exhibit a high degree of \emph{indistinguishability} with regards to data the system intends to capture; that is, it must be difficult for an adversary to distinguish injected noise from the data it is attempting to collect \cite{Gervais,Balsa}.
 Thus we strive to make AdNauseam visit requests indistinguishable from those sent for manual requests. However, there are times when this goal comes into tension with other aims of the software, specifically that of protection, e.g., from malware.
 
-For example, when crafting a visit request, we must decide whether the DOM for an incoming request should be parsed and executed, and whether client-side scripts should be allowed to run. In current AdNauseam versions, visits are implemented via AJAX requests, which means that a DOM is not constructed from the response, and client-side scripts are not executed. While protection is maximized here (against malicious code embedded in ads, i.e., malvertising), obfuscatory power may be diminished. For example, one vector of attack we have noted is from an adversary who, upon receiving a click request, sends a preliminary response containing JavaScript code that executes from within the DOM. In this case, if the client-side script never runs, then the click is never executed. We have experimented with solutions that address this issue and thus better support indistinguishability (including executing clicks in sandboxed invisible tabs), but have yet to settle on a solution that adequately protects user data and is cross-platform. For the moment we leave this as future work.
+For example, when crafting a visit request, we must decide whether the DOM for an incoming request should be parsed and executed, and whether client-side scripts should be allowed to run. In current AdNauseam versions, visits are implemented via AJAX requests, which means that a DOM is not constructed from the response, and client-side scripts are not executed. While protection is maximized here (against malicious code embedded in ads, i.e., malvertising), obfuscatory power may be diminished. For example, one vector of attack we have noted is from an adversary who, upon receiving a click request, sends a preliminary response containing JavaScript code that executes from within the DOM. In this case, if the client-side script never runs, then the click is never executed. We have experimented with solutions that address this issue and thus better support indistinguishability (including executing clicks in sandboxed invisible tabs), but have yet to find a cross-platform solution that adequately protects user data. For the moment we leave this as future work.
 
 % how accurately to mimic the data that the browser normally sends, specifically regarding user-agent and referer headers, and whether to include the cookies normally sent with the request. If we match these exactly then our request is indeed indistinguishable (assuming the browser is not modified to hide such details), and thus more difficult for an adversary to filter. However, this may also leak information to advertising networks that a user considers private, e.g., the URL of the page the ad was found on, the type of browser, operating system, etc. they are using. Similarly, we must decide whether to block incoming cookies from AdNauseam visits,
 % While we can provide user configurable settings for all these parameters, we must still consider the appropriate defaults by weighing risks to the user against potential gains in obfuscatory power (see \emph{Risk Analysis}).

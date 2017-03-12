@@ -1,0 +1,73 @@
+----------------------- REVIEW 1 ---------------------
+
+The paper presents a case study application of a browser extension developed by the authors, which embeds their earlier developed idea of obfuscation. Other than block function, the extension vaults the blocked ads (I’d say similar to an email spam box), and, and this is the novelty, it also clicks on the ad behind the scenes. The result is a subversive function, which the authors explain also as a societal one, rather than just an individualistic act. It is also a form of protest. The paper details the goals, design process, challenges etc. The tool is value driven all over, and the values of protection, expression (the protest) and increasing understanding of the data processes, thus creating transparency, are well-thought of. The authors do not leave one stone unturned in their discussion, and provide not only a thorough discussion of the specific tool, but a blue print for developing similar tools, which carry out obfuscation, and achieve the above goals. It provides an excellent case of active, yet perfectly legitimate resistance to pervasive data collection practices. An important discussion, which might further unfold, is Google’s removal of the extension from its app store. This is interesting in itself, but exposes the challenges that PbD faces. Overall, the paper perfectly fits IWPE in spirit and in detail, in rigor and originality, in tying design and ethical considerations into an unusually fascinating case, which has implications beyond its specificity.
+
+
+----------------------- REVIEW 2 ---------------------
+
+The paper presents the design and evaluation of an open-source browser extension developed and implemented by the authors. Fundamentally, this extension sets out to hinder instances of user-tracking in online advertisements. The work provides a proof of concept to the approach to privacy by the means of obfuscation.
+
+The structure of the paper is very straightforward and logical, which renders the contents easy to follow. Throughout the text body, the line of argumentation remains sound for the purpose and convincing in execution. The papers’ strong stance on the importance of impeding machine-readable tracking and data profiling can be considered as timely as ever.
+
+An obvious merit of the work is its writing and presentation. Initially, the design goals and the challenges attributable to their interrelations are clearly presented. Then, the modular architecture of the tool is discussed. The tool’s comparative technical evaluation concludes the main body of the work. Another merit is the incorporation of ethical considerations into this evaluation. The paper also discusses relevant extant approaches to privacy by obfuscation. The intention behind AdNauseam, namely the attempt to showcase a way to hamper business models based on surveillance, is also meritable.
+
+Some typos and linguistic inconsistencies remain and need to be corrected (e.g. “Lastly, critics have claime that AdNauseam harms independent content producers who can no longer support their sites.”; “For AdNauseam, we have decided on default setting that maximize user protection.”). In addition, in Section III, Part A the single Subsection 'Point 1' would maybe deserve an extension and transformation into a Part B in its own right. Nonetheless, an acceptance is recommended based on content and quality of this early evaluation of the tool that is in a position to contribute towards user privacy.
+
+2a. (TYPO) “Lastly, critics have claime that AdNauseam harms independent content producers who can no longer support their sites.”  FIXED:
+
+2b. (TYPO) “For AdNauseam, we have decided on default setting that maximize user protection.” FIXED:
+
+2c. (SUGGESTION) "Section III, Part A the single Subsection 'Point 1' would maybe deserve an extension and transformation into a Part B in its own right."
+
+----------------------- REVIEW 3 ---------------------
+
+This is an interesting discussion of a past/ongoing project. Of particular interest, I think, are the arguments for why privacy can be identified as a societal value and why a privacy-enhancing technology in that case could be more about expression or protest than simple protection. That's something I would like to see elaborated in the literature and in our discussions more generally.
+
+In some cases, though, this seems like it's taking those arguments and forcing them into a scientific-workshop-paper style. I would rather read an essay to these points. It wasn't clear to me why there were graphs regarding memory footprint or page-load time, for example -- those don't seem reflected in the design goals set out at the beginning. The Conclusion and the recounting of debates about removal from the Chrome store are very interesting, but seem less connected to the analysis of the engineering approach we expect from the abstract of the paper.
+
+As a substantive matter, I'm not entirely clear on how protection from malware is being achieved by automated clicking on ads, or how obfuscation or protest are being achieved when headers are removed. Is there any reason to think that ad clicks aren't being ignored when there is no User-Agent or Referer header? (Without a Referer, I'm not sure the typical ad network could even determine which site generated the click.)
+
+
+3a. (CLARIFICATION) "It wasn't clear to me why there were graphs regarding memory footprint or page-load time, for example -- those don't seem reflected in the design goals set out at the beginning." TODO
+
+3b. (CLARIFICATION) "The Conclusion and the recounting of debates about removal from the Chrome store are very interesting, but seem less connected to the analysis of the engineering approach we expect from the abstract of the paper." TODO
+
+3c. (CLARIFICATION) "I'm not entirely clear on how protection from malware is being achieved by automated clicking on ad" TODO
+
+3d. (CLARIFICATION) "[I'm not entirely clear how] obfuscation or protest are being achieved when headers are removed. Is there any reason to think that ad clicks aren't being ignored when there is no User-Agent or Referer header?"
+
+FIXED: this section was indeed distracting and has been removed from the final draft.
+
+----------------------- REVIEW 4 ---------------------
+
+This paper introduces adnauseam, an adblocker + ad clicking obfuscator that seeks to push back against and protest tracking performed by advertising networks on the Internet. The paper describes the design goals and strategies deployed to achieve those goals, as well as a high-level evaluation of the extent to which those goals are met by adnauseam.
+
+I have a number of concerns and comments about this paper.
+Essentially, I am not convinced that obfuscation is the right type of technique in this setting, considering goals of (1) protection from data aggregation and profiling and (2) expression. Besides, I am unsure about what the goal (3) "increased understanding" means and to what extent this is actually achieved by adnauseam.
+
+(1) In terms of protection from data aggregation and profiling, blocking seems to be a better choice in this scenario.
+If one compares adnauseam with other obfuscation tools, there is a key difference in the scenarios/services for which these tools were designed, e.g., location based services (LBS) or web search. People are interested in using LBS and web search, whereas it is unclear to what extent people are interested in getting ads and clicking on them. In fact, the authors acknowledge that most users use adnauseam simply as an adblocker. So what is the added value of clicking on ads when users would rather block all advertising?
+
+If we do consider that users may be interested in clicking on some ads and hiding which ads they have precisely clicked on, then indistinguishability becomes key, and the paper acknowledges this is something that has not been properly addressed yet, so we may assume that adnauseam's fake clicks are currently distinguishable from real clicks and therefore offer no protection to these users.
+Even if we assume that adnauseam is ignored by advertisers (we cannot assume undetectability because of adnauseam's strategy to click on all ads), users would still be profiled considering all real and fake clicks, and it is unclear what the effects of this would be on them.
+
+The paper says that "when crafting a visit request, we must [decide how] accurately to mimic the data that the browser normally sends". However, the indistinguishability criteria need not be between "the data the browser normally sends" and the "the data sent by adnauseam". As a browser extension, adnauseam could "intercept" real clicks and "format them" in the way adnauseam generates fake clicks. In other words, instead of generating fake clicks with real clicks metadata, modify real clicks to have fake clicks metadata. Still, as the paper already acknowledges, there are many other challenges in achieving indistinguishability which are left for future work.
+
+(2) In terms of expression, I fail to see how the use of obfuscation is better a technique than blocking. Expressing discontent through blocking is as blunt and direct as generating fake clicks, specially if we consider that the advertisers may not be aware of the presence of those fake clicks.
+If advertisers do not know about adnauseam, then tracking practices continue as usual (with uncertain effects on users as mentioned above). If they know, they have incentives to simply block or discard fake clicks and, in this sense, indistinguishability is key. If fake clicks can be easily distinguished, then advertisers can continue to do business as usual. So again, blocking seems to me a better design choice in terms of expression.
+
+The paper states that "Rather than promoting the conception of privacy as concealment Adnauseam provides a means for users to express, in plain sight, their dissent" and "since protest frequently involves being vocal, AdNauseam's core design at times conflicts with privacy conceptions based on secrecy and concealment". These statements are quite misleading. AdNauseam's use of obfuscation is very much about secrecy and concealment: it tries to hide what the actual clicks of the user are by laying a cloak of fake clicks over them. What adnauseam does not try to conceal and in fact seeks to be very vocal about is the use or presence of the tool itself (for which hiding would require steganographic properties). However, the privacy problem at hand relates to the profile that can be built from the users' clicks on ads, not to the use of the tool. Therefore, adnauseam does address the privacy problem with secrecy and concealment. My question is: would the authors state the same ab!
+out email encryption? Sending encrypted emails hides the content of the message to an eavesdropper. However, it is very "vocal" about the fact that that hiding is taking place, as ciphertext can be easily distinguished from plaintext. My point is that the privacy problem is about hiding the content of the email/the user's real clicks, not about hiding that the user is sending an encrypted email/generating fake clicks.
+
+Similarly, the paper states that "a tool that is perfectly protective - for which it is never possible to filter noise from data - will often be functionally invisible to an adversary. If an adversary is literally unaware of injected noise [...]". This is not true and very misleading. We must differentiate between (a) indistinguishability between real and fake clicks (or whatever other action being obfuscated) and (b) detectability of the tool (with undetectability leading to unawareness). Incidentally, adnauseam could be considered a good example of a tool that is easily "visible"/ detectable (no user would consistently click on all ads in all pages), in part because that visibility or expression is one of its goals!, even if real clicks cannot be distinguished from fake ones (and therefore perfectly protective). The dichotomy between expression and protection is, at least in this context, false.
+
+(3) Thirdly, with respect to adnauseam's goal of "facilitate real-time understanding of the advertising system at work", "enhance the user-experience with greater insight into the online advertising landscape" and "generate insight into the larger picture beyond momentary interactions". I see major problems with all these goals. First of all, they are very vague. What are adnauseam users supposed to "understand" exactly? What does "greater insight into the online advertising landscape" mean? And "insight into the larger picture"? Unclear to me what larger picture the authors refer to. This is not properly specified in the paper. Secondly, there is no evaluation of how these goals are met. Do users gain "understanding of the advertising system at work"? Unclear to me. Users are indeed shown information about the ads captured by adnauseam. However, I do not know if this enables the users' understanding of whatever adnauseam wants them to understand. I fear that there is this u!
+nderlying assumption that because users are shown "something" they will be able (and willing) to understand something. Again, without a proper definition of what the goals are and a proper evaluation, this sounds rather dodgy to me.
+
+
+
+4a. (TYPO) Section I.D: "...on multiple sites *sites..." (double "sites"). FIXED:
+4b. (TYPO) Section I.E: "critics have *claim that" (missing "d" in claimed). FIXED:
+4c. (TYPO) Section II.A, first paragraph: grammar mismatch "Such requests [...] *is [...] *it [...]" (should be "are", "they"). FIXED:
+4d. (TYPO) Section II.E, last paragraph: "In this instance it * a counter-surveillance [...]". (Missing "is"). FIXED:
+4e. 

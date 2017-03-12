@@ -70,4 +70,4 @@ nderlying assumption that because users are shown "something" they will be able 
 4b. (TYPO) Section I.E: "critics have *claim that" (missing "d" in claimed). FIXED:
 4c. (TYPO) Section II.A, first paragraph: grammar mismatch "Such requests [...] *is [...] *it [...]" (should be "are", "they"). FIXED:
 4d. (TYPO) Section II.E, last paragraph: "In this instance it * a counter-surveillance [...]". (Missing "is"). FIXED:
-4e. 
+4e.

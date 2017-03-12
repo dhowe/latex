@@ -16,7 +16,7 @@ Categories are noted in parentheses, e.g., (TYPO). Resolutions are noted in squa
 
 3a. (CLARIFICATION) "It wasn't clear to me why there were graphs regarding memory footprint or page-load time, for example -- those don't seem reflected in the design goals set out at the beginning."  [FIXED: Usability goals, including speed, and memory-use are now included in 'Design Goals' section.]
 
-3b. (CLARIFICATION) "The Conclusion and the recounting of debates about removal from the Chrome store are very interesting, but seem less connected to the analysis of the engineering approach we expect from the abstract of the paper." [IGNORED: This discussion relates directly to distribution concerns which are a) relevant to privacy engineering, and b) mentioned in our abstract & roadmap ]
+3b. (CLARIFICATION) "The Conclusion and the recounting of debates about removal from the Chrome store are very interesting, but seem less connected to the analysis of the engineering approach we expect from the abstract of the paper." [IGNORED: This discussion relates directly to distribution concerns which are a) relevant to privacy engineering, and b) mentioned in our abstract & roadmap, and c) justified at the start of subsection 'Architecture'-> 'Distribution']
 
 3c. (CLARIFICATION) "I'm not entirely clear on how protection from malware is being achieved by automated clicking on ad" [PENDING: This is certainly addressed, but perhaps can be clarified]
 
